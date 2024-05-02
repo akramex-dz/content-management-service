@@ -2,10 +2,10 @@ const express = require('express');
 
 const router = express.Router();
 
-router.get('/', (req, res) => {
-  res.json({
-    message: 'This the simple feed content management service API.',
-  });
-});
+const posts = require('./Controllers/posts.controller');
+const comments = require('./Controllers/comments.controller');
+
+router.use('/posts', posts);
+router.use('/comments', comments);
 
 module.exports = router;
