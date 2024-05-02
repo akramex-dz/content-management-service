@@ -16,6 +16,10 @@ app.use(helmet());
 app.use(cors());
 app.use(express.json());
 
+const connectMongo = require('./utils/db');
+
+connectMongo();
+
 app.get('/test-db', (req, res) => {
   try {
     res.json({

@@ -1,8 +1,15 @@
-const { MongoClient } = require('mongodb');
+const mongoose = require('mongoose');
 
-const client = new MongoClient(process.env.DATABASE_URL);
-client.connect();
-
-module.exports = {
-  client,
+const connect = async () => {
+  try {
+    await mongoose.connect(process.env.DATABASE_URL, {
+      useNewUrlParser: true,
+      useUnifiedTopology: true,
+    });
+    console.log('Database connected successfully'); // delete before going to production
+  } catch (error) {
+    throw new Error('Failed to connect to database');
+  }
 };
+
+module.exports = connect;
