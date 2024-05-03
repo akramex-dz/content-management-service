@@ -53,13 +53,24 @@ const updateCommentById = async (commentId, updatedData) => {
 };
 
 // add a comment to a post by ID
-const addLikeToComment = async (postId, likeId) => {
+const addLikeToComment = async (commentId, likeId) => {
   try {
     const comment = await Comment
-      .findByIdAndUpdate(postId, { $push: { likes: likeId } }, { new: true });
+      .findByIdAndUpdate(commentId, { $push: { likes: likeId } }, { new: true });
     return comment;
   } catch (error) {
-    throw new Error('Failed to add comment to post');
+    throw new Error('Failed to add like to post');
+  }
+};
+
+// remove a like from a comment by ID
+const removeLikeFromComment = async (commentId, likeId) => {
+  try {
+    const comment = await Comment
+      .findByIdAndUpdate(commentId, { $pull: { likes: likeId } }, { new: true });
+    return comment;
+  } catch (error) {
+    throw new Error('Failed to remove like from comment');
   }
 };
 
@@ -81,5 +92,6 @@ module.exports = {
   getCommentsByUserId,
   updateCommentById,
   addLikeToComment,
+  removeLikeFromComment,
   deleteCommentById,
 };

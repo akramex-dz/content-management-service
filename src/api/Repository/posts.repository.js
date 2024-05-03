@@ -1,7 +1,4 @@
-const {
-  Post,
-  // Like,
-} = require('../Models/Post.model');
+const Post = require('../Models/Post.model');
 
 // Create a new post
 const createPost = async (postData) => {
@@ -77,23 +74,27 @@ const addCommentToPost = async (postId, commentId) => {
   }
 };
 
-// async function likePostById(postId, userId) {
-//   const like = new Like({ userId, postId });
-//   try {
-//     await like.save();
+// add a post to a post by ID
+const addLikeToPost = async (postId, likeId) => {
+  try {
+    const post = await Post
+      .findByIdAndUpdate(postId, { $push: { likes: likeId } }, { new: true });
+    return post;
+  } catch (error) {
+    throw new Error('Failed to add like to post');
+  }
+};
 
-//     const post = await Post.findById(postId);
-//     if (!post) {
-//       throw new Error('post unfound');
-//     }
-//     post.likes.push(like.id);
-
-//     await post.save();
-//     return post;
-//   } catch (error) {
-//     console.error('Error adding like:', error);
-//   }
-// }
+// remove a like from a post by ID
+const removeLikeFromPost = async (postId, likeId) => {
+  try {
+    const post = await Post
+      .findByIdAndUpdate(postId, { $pull: { likes: likeId } }, { new: true });
+    return post;
+  } catch (error) {
+    throw new Error('Failed to remove like from post');
+  }
+};
 
 // Delete a post by ID
 const deletePostById = async (postId) => {
@@ -112,6 +113,7 @@ module.exports = {
   getPostsByUserIds,
   updatePostById,
   addCommentToPost,
-  // likePostById,
+  addLikeToPost,
+  removeLikeFromPost,
   deletePostById,
 };

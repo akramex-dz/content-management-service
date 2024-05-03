@@ -81,6 +81,13 @@ router.post('/:commentId/like', async (req, res) => {
       console.log(comment);
       res.status(404).json({ error: 'Comment not found' });
     }
+
+    const likeExists = await likesRepository
+      .getLikeByLikedIdAndUserId(req.params.commentId, req.body.userId, 'Comment');
+    if (likeExists) {
+      res.status(400).json({ error: 'You have already liked this comment' });
+    }
+
     const like = await likesRepository.createLike({
       userId: req.body.userId,
       onModel: 'Comment',
@@ -104,9 +111,8 @@ router.delete('/:commentId/unlike/:userId', async (req, res) => {
     if (!likeTodelete) {
       res.status(404).json({ error: 'Like not found' });
     }
-
     await likesRepository.deleteLikeById(likeTodelete._id);
-
+    await commentsRepository.removeLikeFromComment(req.params.commentId, likeTodelete._id);
     res.status(204).send();
   } catch (error) {
     res.status(500).json({ error: 'Internal Server Error' });
