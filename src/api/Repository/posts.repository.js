@@ -1,7 +1,4 @@
-const {
-  Post,
-  // Like,
-} = require('../Models/Post.model');
+const Post = require('../Models/Post.model');
 
 // Create a new post
 const createPost = async (postData) => {
@@ -49,7 +46,8 @@ const getPostsByUserId = async (userId) => {
 // Get a single post by ID
 const getPostById = async (postId) => {
   try {
-    const post = await Post.findById(postId);
+    const post = await Post.findById(postId).populate('comments').populate('likes');
+
     return post;
   } catch (error) {
     throw new Error('Failed to get post');
@@ -66,23 +64,38 @@ const updatePostById = async (postId, postData) => {
   }
 };
 
-// async function likePostById(postId, userId) {
-//   const like = new Like({ userId, postId });
-//   try {
-//     await like.save();
+// add a comment to a post by ID
+const addCommentToPost = async (postId, commentId) => {
+  try {
+    const post = await Post
+      .findByIdAndUpdate(postId, { $push: { comments: commentId } }, { new: true });
+    return post;
+  } catch (error) {
+    throw new Error('Failed to add comment to post');
+  }
+};
 
-//     const post = await Post.findById(postId);
-//     if (!post) {
-//       throw new Error('post unfound');
-//     }
-//     post.likes.push(like.id);
+// add a post to a post by ID
+const addLikeToPost = async (postId, likeId) => {
+  try {
+    const post = await Post
+      .findByIdAndUpdate(postId, { $push: { likes: likeId } }, { new: true });
+    return post;
+  } catch (error) {
+    throw new Error('Failed to add like to post');
+  }
+};
 
-//     await post.save();
-//     return post;
-//   } catch (error) {
-//     console.error('Error adding like:', error);
-//   }
-// }
+// remove a like from a post by ID
+const removeLikeFromPost = async (postId, likeId) => {
+  try {
+    const post = await Post
+      .findByIdAndUpdate(postId, { $pull: { likes: likeId } }, { new: true });
+    return post;
+  } catch (error) {
+    throw new Error('Failed to remove like from post');
+  }
+};
 
 // Delete a post by ID
 const deletePostById = async (postId) => {
@@ -100,6 +113,8 @@ module.exports = {
   getAllPosts,
   getPostsByUserIds,
   updatePostById,
-  // likePostById,
+  addCommentToPost,
+  addLikeToPost,
+  removeLikeFromPost,
   deletePostById,
 };

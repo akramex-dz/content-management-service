@@ -32,22 +32,4 @@ const postSchema = new mongoose.Schema(
   },
 );
 
-const LikeSchema = new mongoose.Schema({
-  userId: {
-    type: String,
-    required: true,
-  },
-  postId: {
-    type: mongoose.Schema.Types.ObjectId,
-    ref: 'Post',
-    required: true,
-  },
-});
-
-const Post = mongoose.model('Post', postSchema);
-const Like = mongoose.model('Like', LikeSchema);
-
-module.exports = {
-  Post,
-  Like,
-};
+module.exports = mongoose.model('Post', postSchema);
