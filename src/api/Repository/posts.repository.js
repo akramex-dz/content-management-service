@@ -46,7 +46,8 @@ const getPostsByUserId = async (userId) => {
 // Get a single post by ID
 const getPostById = async (postId) => {
   try {
-    const post = await Post.findById(postId);
+    const post = await Post.findById(postId).populate('comments').populate('likes');
+
     return post;
   } catch (error) {
     throw new Error('Failed to get post');

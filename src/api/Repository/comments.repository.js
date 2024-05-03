@@ -15,7 +15,8 @@ const createComment = async (commentBody) => {
 // Get comment by id
 const getCommentById = async (commentId) => {
   try {
-    const comment = await Comment.find({ commentId });
+    const comment = await Comment.findById(commentId).populate('likes').sort({ createdAt: -1 });
+
     return comment;
   } catch (error) {
     throw new Error('Failed to get comment');
@@ -25,7 +26,7 @@ const getCommentById = async (commentId) => {
 // get all comments by postId sorted by their date
 const getCommentsByPostId = async (postId) => {
   try {
-    const comments = await Comment.find({ postId }).sort({ createdAt: -1 });
+    const comments = await Comment.find({ postId }).populate('likes').sort({ createdAt: -1 });
     return comments;
   } catch (error) {
     throw new Error('Failed to get comments');
@@ -35,7 +36,7 @@ const getCommentsByPostId = async (postId) => {
 // Get all comments by userId sorted by their date
 const getCommentsByUserId = async (userId) => {
   try {
-    const comments = await Comment.find({ userId }).sort({ createdAt: -1 });
+    const comments = await Comment.find({ userId }).populate('likes').sort({ createdAt: -1 });
     return comments;
   } catch (error) {
     throw new Error('Failed to get comments');

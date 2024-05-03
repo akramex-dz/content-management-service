@@ -29,6 +29,19 @@ router.get('/post/:postId', async (req, res) => {
   }
 });
 
+// GET a comment by ID Tested
+router.get('/:commentId', async (req, res) => {
+  try {
+    const comment = await commentsRepository.getCommentById(req.params.commentId);
+    if (!comment) {
+      res.status(404).json({ error: 'Comment not found' });
+    }
+    res.json(comment);
+  } catch (error) {
+    res.status(500).json({ error: 'Internal Server Error' });
+  }
+});
+
 // POST a new comment Tested
 router.post('/', async (req, res) => {
   try {
