@@ -1,5 +1,5 @@
 const express = require('express');
-const postsRepository = require('../Repository/posts');
+const postsRepository = require('../Repository/posts.repository');
 
 const router = express.Router();
 

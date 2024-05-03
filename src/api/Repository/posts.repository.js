@@ -66,6 +66,17 @@ const updatePostById = async (postId, postData) => {
   }
 };
 
+// add a comment to a post by ID
+const addCommentToPost = async (postId, commentId) => {
+  try {
+    const post = await Post
+      .findByIdAndUpdate(postId, { $push: { comments: commentId } }, { new: true });
+    return post;
+  } catch (error) {
+    throw new Error('Failed to add comment to post');
+  }
+};
+
 // async function likePostById(postId, userId) {
 //   const like = new Like({ userId, postId });
 //   try {
@@ -100,6 +111,7 @@ module.exports = {
   getAllPosts,
   getPostsByUserIds,
   updatePostById,
+  addCommentToPost,
   // likePostById,
   deletePostById,
 };
