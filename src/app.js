@@ -34,7 +34,7 @@ app.get('/test-db', (req, res) => {
   }
 });
 
-app.use('/content-management-service/', api);
+app.use('/content-management-service/', middlewares.apiKeyAuth, api);
 
 app.use(middlewares.notFound);
 app.use(middlewares.errorHandler);
